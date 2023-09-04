@@ -1,13 +1,14 @@
-import { Avatar, Layout, Menu, Tooltip } from "antd";
-import { Link } from "react-router-dom";
+import { Avatar, Button, Layout, Menu, Tooltip,message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
 import {AiOutlineSetting,AiOutlineUnlock} from "react-icons/ai"
 import {RxDashboard} from "react-icons/rx";
 import {BsPaypal} from "react-icons/bs";
 import {LiaFileInvoiceSolid} from "react-icons/lia";
-
+import { AUTH_TOKEN_NAME } from "../../../utils/defaults";
 import Logo from "../../../assets/logo.png"
 import { Outlet } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
+import { userStore } from "../../../store/userStore";
 
 const {Header,Content} = Layout;
 
@@ -38,13 +39,23 @@ const NAV_ITEMS = [
             {
                 key:"passReset",
                 icon:<AiOutlineUnlock style={{fontSize:20,color:"black"}}/>,
-                label:<Link style={{color:"black"}}><b>Reset Password</b></Link>
+                label:<Link to="/user/settings/password-reset" style={{color:"black"}}><b>Reset Password</b></Link>
             }
         ]
     },
 ]
 
 export default function UserDashboardLayout(){
+    const navigate = useNavigate();
+
+    const logout = userStore(state=>state.logout);
+
+    const handleLogout = ()=>{
+        sessionStorage.removeItem(AUTH_TOKEN_NAME);
+        logout();
+        message.success("User Logged out successfully");
+        navigate("/");
+    }
 
     return(
         <>
@@ -64,7 +75,9 @@ export default function UserDashboardLayout(){
                style={{minWidth:"40vw",backgroundColor:"#008000",color:"white"}}
               />
               <Tooltip title="logout">
-                <Avatar size={24} src={<FaUserCircle/>}/>
+                <Button type="text" onClick={handleLogout}>
+                    <Avatar size={24} src={<FaUserCircle/>}/>
+                </Button>
               </Tooltip>
             </div>
             </Header>

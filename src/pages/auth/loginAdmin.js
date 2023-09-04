@@ -1,10 +1,55 @@
-import { Avatar, Button, Checkbox, Form, Input, Typography } from "antd";
+import { Avatar, Button, Checkbox,message, Form, Input, Typography } from "antd";
+import { useRef } from "react";
 import {RiAdminLine} from "react-icons/ri"
+import { useAdminLogin } from "../../hooks/auth";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { extractValueFromInputRef } from "../../utils/helpers";
+import { getUserProfile,userStore } from "../../store/userStore";
+import { AUTH_TOKEN_NAME } from "../../utils/defaults";
 
 const {Title} = Typography;
 
 
 export default function LoginAdmin(){
+    const [loading,setLoading] = useState(false);
+    const navigate = useNavigate();
+
+    const setUser = userStore(state=>state.setUser);
+
+    const [form] = Form.useForm();
+
+
+
+    const userIdRef = useRef(null);
+    const passRef = useRef(null);
+
+
+    const loginAdmin = useAdminLogin();
+
+
+    const login = async ()=>{
+        setLoading(true);
+        const payload = {
+            userId:extractValueFromInputRef(userIdRef),
+            password:extractValueFromInputRef(passRef)
+        }
+        const responseToken = await loginAdmin(payload);
+        if(!responseToken){
+            setLoading(false);
+            return;
+        }
+        sessionStorage.setItem(AUTH_TOKEN_NAME,responseToken);
+        message.success("Admin Logged in successfully");
+        form.resetFields();
+        setTimeout(async()=>{
+            const {password,...userData} = await getUserProfile();
+            message.success("Redirecting to Dashboard...")
+            setUser(userData);
+            setLoading(false);
+            return navigate("/admin")
+        },2000)
+    }
     
     return(
         <>
@@ -43,15 +88,15 @@ export default function LoginAdmin(){
                         <Title level={3}>
                             Administrator
                         </Title>
-                        <Form style={{width:"100%"}}>
+                        <Form form={form} style={{width:"100%"}}>
                             <Form.Item>
-                                <Input placeholder="Enter your User ID"/>
+                                <Input ref={userIdRef} placeholder="Enter your User ID"/>
                             </Form.Item>
                             <Form.Item>
-                                <Input placeholder="Enter your password"/>
+                                <Input.Password ref={passRef} placeholder="Enter your password"/>
                             </Form.Item>
                             <Form.Item>
-                                <Button size="large" block type="primary">
+                                <Button onClick={login} loading={loading} size="large" block type="primary">
                                     Login
                                 </Button>
                             </Form.Item>

@@ -1,8 +1,16 @@
-import {Row,Col,Button,Form,Typography,Image, Avatar, Input, Card, Space, Steps, Select, DatePicker, InputNumber, Result} from "antd"
+import {Row,Col,Button,Form,Typography,Avatar, Input, Card, Space, Steps, Select, DatePicker, Result,message} from "antd"
 import Logo from "../../assets/nsirs.webp";
 import {BackwardOutlined,CheckOutlined,ForwardOutlined,LockOutlined,LoadingOutlined} from "@ant-design/icons";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useSizes } from "../../hooks/size";
+import { useCategories } from "../../hooks/category";
+import { useLgas } from "../../hooks/lga";
+import { useGtos } from "../../hooks/gto";
+import { useBillings } from "../../hooks/billing";
+import { useTypes } from "../../hooks/types";
+import { extractValueFromInputRef } from "../../utils/helpers";
+import { useRegistration } from "../../hooks/auth";
 
 const {Title} = Typography;
 const {Option} = Select;
@@ -22,15 +30,15 @@ const steps = [
 
 
 const NextButton = ({form,next,step})=>{
-    const [submittable,setSubmittable] = useState(false);
+    const [submittable,setSubmittable] = useState(true);
 
     const values = Form.useWatch([],form);
 
-    useEffect(()=>{
-        form.validateFields({
-            validateOnly:true
-        }).then(()=>{setSubmittable(true)},()=>setSubmittable(false))
-    },[values])
+    // useEffect(()=>{
+    //     form.validateFields({
+    //         validateOnly:true
+    //     }).then(()=>{setSubmittable(true)},()=>setSubmittable(false))
+    // },[values])
 
 
     return(
@@ -44,8 +52,26 @@ const NextButton = ({form,next,step})=>{
 
 export default function RegisterUser(){
     const [currentStep,setCurrentStep] = useState(0);
+    const [loading,setLoading] = useState(false)
+    const [gender,setGender] = useState("");
+    const [size,setSize] = useState("");
+    const [type,setType] = useState("");
+    const [category,setCategory] = useState("");
+    const [lga,setLga] = useState("");
+    const [gto,setGto] = useState("");
+    const [duration,setDuration] = useState("");
+    const [estDate,setEstDate] = useState("");
 
+    const navigate = useNavigate();
     const [form] = Form.useForm();
+
+
+    const {sizes} = useSizes();
+    const {categories} = useCategories();
+    const {lgas} = useLgas();
+    const {gtos} = useGtos();
+    const {billings} = useBillings();
+    const {types} = useTypes();
 
     const next = ()=>{
         if(currentStep == (steps.length -1)) return;
@@ -57,6 +83,54 @@ export default function RegisterUser(){
         setCurrentStep((s)=>s-1)
     }
     
+    // REFS TO INPUTS
+    const firstnameRef = useRef(null);
+    const lastnameRef = useRef(null);
+    const emailRef =  useRef(null);
+    const phoneRef =  useRef(null);
+    const passRef =  useRef(null);
+    const confPassRef =  useRef(null);
+    const homeTownRef =  useRef(null);
+    const homeAddressRef =  useRef(null);
+    const busnameRef =  useRef(null);
+    const busAddRef =  useRef(null);
+
+    const signup = useRegistration();
+
+
+
+    const handleSubmit = async ()=>{
+        setLoading(true)
+
+        const userData = {
+            firstname:extractValueFromInputRef(firstnameRef),
+            lastname:extractValueFromInputRef(lastnameRef),
+            email:extractValueFromInputRef(emailRef),
+            phone:extractValueFromInputRef(phoneRef),
+            password:extractValueFromInputRef(passRef),
+            confirmPassword:extractValueFromInputRef(confPassRef),
+            gender,
+            homeTown:extractValueFromInputRef(homeTownRef),
+            address:extractValueFromInputRef(homeAddressRef)
+        };
+
+        const businessData = {
+            name:extractValueFromInputRef(busnameRef),
+            address:extractValueFromInputRef(busAddRef),
+            LocalGovernmentAreaId:lga.toString(),
+            TaxId:gto.toString(),
+            establishment:new Date(estDate),
+            BillingDurationId:duration.toString(),
+            SizeId:size.toString(),
+            TypeId:type.toString(),
+            CategoryId:category.toString()
+        }
+        const payload = {userData,businessData};
+        await signup(payload);
+        message.success("signup successful");
+        setLoading(false);
+        return navigate('/');
+    }
 
 
     return(
@@ -81,9 +155,7 @@ export default function RegisterUser(){
                         </Link>
                 </div>
                 <Card title={steps[currentStep].title} style={{width:"60vw",height:"50vh"}}>
-                    {
-                        currentStep == 0 && (
-                    <Form form={form} name="validateOnly">
+                    <Form form={form} name="validateOnly" style={{display:`${currentStep === 0?"block":"none"}`}}>
                     <Row gutter={8} style={{height:"5em"}}>
                         <Col span={8}>
                             <Form.Item name="firstname" rules={[
@@ -92,7 +164,7 @@ export default function RegisterUser(){
                                     message:"This field is required"
                                 }
                             ]}>
-                                <Input placeholder="enter firstname"/>
+                                <Input ref={firstnameRef} placeholder="enter firstname"/>
                             </Form.Item>
                         </Col>
                         <Col span={8}>
@@ -102,7 +174,7 @@ export default function RegisterUser(){
                                     message:"This field is required"
                                 }
                             ]}>
-                                <Input placeholder="enter lastname"/>
+                                <Input ref={lastnameRef} placeholder="enter lastname"/>
                             </Form.Item>
                         </Col>
                         <Col span={8}>
@@ -112,7 +184,7 @@ export default function RegisterUser(){
                                     message:"This field is required"
                                 }
                             ]}>
-                                <Input placeholder="enter phone number"/>
+                                <Input ref={phoneRef} placeholder="enter phone number"/>
                             </Form.Item>
                         </Col>
                     </Row>
@@ -124,7 +196,7 @@ export default function RegisterUser(){
                                     message:"This field is required"
                                 }
                             ]}>
-                                <Input type="email" placeholder="enter email"/>
+                                <Input ref={emailRef} type="email" placeholder="enter email"/>
                             </Form.Item>
                         </Col>
                         <Col span={8}>
@@ -134,7 +206,7 @@ export default function RegisterUser(){
                                     message:"This field is required"
                                 }
                             ]}>
-                                <Input.Password placeholder="enter password"/>
+                                <Input.Password ref={passRef} placeholder="enter password"/>
                             </Form.Item>
                         </Col>
                         <Col span={8}>
@@ -144,7 +216,7 @@ export default function RegisterUser(){
                                     message:"This field is required"
                                 }
                             ]}>
-                                <Input.Password placeholder="re-enter password"/>
+                                <Input.Password ref={confPassRef} placeholder="re-enter password"/>
                             </Form.Item>
                         </Col>
                     </Row>
@@ -156,7 +228,7 @@ export default function RegisterUser(){
                                     message:"This field is required"
                                 }
                             ]}>
-                                <Input placeholder="enter address"/>
+                                <Input ref={homeAddressRef} placeholder="enter address"/>
                             </Form.Item>
                         </Col>
                     </Row>
@@ -168,7 +240,7 @@ export default function RegisterUser(){
                                     message:"This field is required"
                                 }
                             ]}>
-                                <Select placeholder="select gender">
+                                <Select placeholder="select gender" onChange={(e)=>setGender(e)}>
                                     <Option value="male" key={1}>Male</Option>
                                     <Option value="female" key={2}>Female</Option>
                                 </Select>
@@ -181,23 +253,19 @@ export default function RegisterUser(){
                                     message:"This field is required"
                                 }
                             ]}>
-                                <Input placeholder="enter home town"/>
+                                <Input ref={homeTownRef} placeholder="enter home town"/>
                             </Form.Item>
                         </Col>
                     </Row>
                     </Form>
-                        )
-                    }
-                    {
-                        currentStep === 1  && (
-                            <Form form={form} style={{marginTop:"1em"}}>
+                            <Form form={form} style={{marginTop:"1em",display:`${currentStep === 1?"block":"none"}`}}>
                                 <Form.Item name="businessName" rules={[
                                 {
                                     required:true,
                                     message:"This field is required"
                                 }
                                 ]}>
-                                    <Input placeholder="enter business name"/>
+                                    <Input ref={busnameRef} placeholder="enter business name"/>
                                 </Form.Item>
                                 <Form.Item name="businessAdress" rules={[
                                 {
@@ -205,7 +273,7 @@ export default function RegisterUser(){
                                     message:"This field is required"
                                 }
                                 ]}>
-                                    <Input placeholder="enter business address"/>
+                                    <Input ref={busAddRef} placeholder="enter business address"/>
                                 </Form.Item>
                                 <Row gutter={12}>
                                     <Col span={12}>
@@ -215,8 +283,12 @@ export default function RegisterUser(){
                                                 message:"This field is required"
                                             }
                                             ]}>
-                                                <Select placeholder="select local government area business is situated at">
-                                                    <Option value="lafia">Lafia</Option>
+                                                <Select placeholder="select local government area business is situated at" onChange={(e)=>setLga(e)}>
+                                                    {
+                                                        lgas.map((l,idx)=>(
+                                                            <Option value={l.id} key={idx}>{l.title}</Option>
+                                                        ))
+                                                    }
                                                 </Select>
                                             </Form.Item>
                                     </Col>
@@ -227,8 +299,64 @@ export default function RegisterUser(){
                                                 message:"This field is required"
                                             }
                                             ]}>
-                                                <InputNumber prefix={"₦"} step={100} style={{width:"100%"}} placeholder="enter annual turn over (ATO) amount"/>
+                                                <Select placeholder="select annual turn over (ATO) amount" onChange={(e)=>setGto(e)}>
+                                                    {
+                                                        gtos.map((g,idx)=>(
+                                                            <Option key={idx} value={g.Tax.id}>{g.title}</Option>
+                                                        ))
+                                                    }
+                                                </Select>
                                             </Form.Item>
+                                    </Col>
+                                </Row>
+                                <Row gutter={12}>
+                                    <Col span={8}>
+                                        <Form.Item name="businessSize" rules={[
+                                            {
+                                                required:true,
+                                                message:"This field is required"
+                                            }
+                                            ]}>
+                                            <Select placeholder="select business size" onChange={(e)=>setSize(e)}>
+                                                {
+                                                    sizes.map((s,idx)=>(
+                                                        <Option value={s.id} key={idx}>{s.title}</Option>
+                                                    ))
+                                                }
+                                            </Select>
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={8}>
+                                        <Form.Item name="category" rules={[
+                                            {
+                                                required:true,
+                                                message:"This field is required"
+                                            }
+                                            ]}>
+                                            <Select placeholder="select business category" onChange={(e)=>setCategory(e)}>
+                                                {
+                                                    categories.map((c,idx)=>(
+                                                        <Option value={c.id} key={idx}>{c.value}</Option>
+                                                    ))
+                                                }
+                                            </Select>
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={8}>
+                                        <Form.Item name="type" rules={[
+                                            {
+                                                required:true,
+                                                message:"This field is required"
+                                            }
+                                            ]}>
+                                            <Select placeholder="select business type" onChange={(e)=>setType(e)}>
+                                                {
+                                                    types.map((t,idx)=>(
+                                                        <Option value={t.id} key={idx}>{t.title}</Option>
+                                                    ))
+                                                }
+                                            </Select>
+                                        </Form.Item>
                                     </Col>
                                 </Row>
                                 <Row gutter={12}>
@@ -239,7 +367,7 @@ export default function RegisterUser(){
                                                 message:"This field is required"
                                             }
                                             ]}>
-                                            <DatePicker placeholder="enter establishment date" style={{width:"100%"}} picker="date"/> 
+                                            <DatePicker onChange={(_,v)=>setEstDate(v)} placeholder="enter establishment date" style={{width:"100%"}} picker="date"/> 
                                         </Form.Item>
                                     </Col>
                                     <Col span={12}>
@@ -249,33 +377,29 @@ export default function RegisterUser(){
                                                 message:"This field is required"
                                             }
                                             ]}>
-                                            <Select placeholder="select payment duration">
-                                                <Option value="weekly">weekly</Option>
-                                                <Option value="monthly">monthly</Option>
-                                                <Option value="yearly">yearly</Option>
+                                            <Select placeholder="select payment duration" onChange={(e)=>setDuration(e)}>
+                                                {
+                                                    billings.map((d,idx)=>(
+                                                        <Option value={d.id} key={idx}>{d.duration}</Option>
+                                                    ))
+                                                }
                                             </Select>
                                         </Form.Item>
                                     </Col>
                                 </Row>
                             </Form>
-                        )
-                    }
-                    {
-                        currentStep === (steps.length -1) && (
-                            <div>
+                            <div style={{display:`${currentStep === (steps.length -1)?"block":"none"}`}}>
                                 <Result 
                                 icon={<LoadingOutlined />}
                                 status={"success"}
                                 title="Confirming Registration..."
                                 extra={[
-                                    <Button type="primary" style={{backgroundColor:"#1677ff"}}>
+                                    <Button loading={loading} key={1}  onClick={handleSubmit} type="primary" style={{backgroundColor:"#1677ff"}}>
                                         Confirm
                                     </Button>
                                 ]}
                                 />
                             </div>
-                        )
-                    }
                 </Card>
                 <div style={{width:"58vw",margin:"1em 0"}}>
                     <Steps current={currentStep} items={steps}/>

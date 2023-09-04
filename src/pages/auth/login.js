@@ -1,15 +1,51 @@
-import {Row,Col,Button,Form,Typography,Image, Avatar, Input} from "antd"
+import {Row,Col,Button,Form,Typography,Image,message, Avatar, Input} from "antd"
 import {UserOutlined,QuestionCircleOutlined} from "@ant-design/icons";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import Lafia from "../../assets/lafia.jpg";
 import Logo from "../../assets/nsirs.webp";
+import { userStore,getUserProfile } from "../../store/userStore";
+import { extractValueFromInputRef } from "../../utils/helpers";
+import { AUTH_TOKEN_NAME } from "../../utils/defaults";
+import { useRef,useState } from "react";
+import { useLogin } from "../../hooks/auth";
 
 const {Title,Link} = Typography;
 
 
 
 export default function LoginUser(){
+    const [loading,setLoading] = useState(false);
+    const navigate = useNavigate();
 
+    const setUser = userStore(state=>state.setUser);
+
+    const emailRef = useRef(null);
+    const passRef = useRef(null);
+
+
+    const loginUser = useLogin();
+
+    const login = async ()=>{
+        setLoading(true);
+        const payload = {
+            email:extractValueFromInputRef(emailRef),
+            password:extractValueFromInputRef(passRef)
+        }
+        const responseToken = await loginUser(payload);
+        if(!responseToken){
+            setLoading(false);
+            return;
+        }
+        sessionStorage.setItem(AUTH_TOKEN_NAME,responseToken);
+        message.success("User Logged in successfully");
+        setTimeout(async()=>{
+            const {password,...userData} = await getUserProfile();
+            message.success("Redirecting to Dashboard...")
+            setUser(userData);
+            setLoading(false);
+            return navigate("/user")
+        },2000)
+    }
 
 
 
@@ -48,13 +84,13 @@ export default function LoginUser(){
                                 <Title level={3}>Login</Title>
                                 <Form>
                                     <Form.Item>
-                                        <Input type="email" placeholder="enter your e-mail"/>
+                                        <Input ref={emailRef} type="email" placeholder="enter your e-mail"/>
                                     </Form.Item>
                                     <Form.Item>
-                                        <Input.Password placeholder="enter your password"/>
+                                        <Input.Password ref={passRef} placeholder="enter your password"/>
                                     </Form.Item>
                                     <Form.Item>
-                                        <Button type="primary" block style={{backgroundColor:"#008000"}}>
+                                        <Button onClick={login} type="primary" block style={{backgroundColor:"#008000"}}>
                                             Login
                                         </Button>
                                     </Form.Item>
