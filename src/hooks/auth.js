@@ -39,3 +39,12 @@ export const useResetPassword = ()=>{
     };
     return resetPassword;
 }
+
+export const useAdminResetPassword = ()=>{
+    const resetPassword = async (id)=>{
+        const url = `/admin/password-reset/user/${id}`;
+        const response = await mutate(url,true,null);
+        return response.message;
+    };
+    return resetPassword;
+}

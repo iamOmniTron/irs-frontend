@@ -68,6 +68,13 @@ const LGA_COLS = [
 ];
 
 
+function NoDataComponent(){
+    return(
+        <h4>click search to view data</h4>
+    )
+}
+
+
 
 function LGAEdit({lga}){
     const [isOpen,setIsOpen] = useState(false);
@@ -209,7 +216,7 @@ export default function LocalGovernmentAreas(){
             <div>
                 <Spin spinning={loading}>
                     <DataTable data={tempData} cols={LGA_COLS} locale={{
-                        
+                        emptyText:<NoDataComponent/>
                     }}/>
                 </Spin>
             </div>

@@ -1,15 +1,16 @@
-import { UserOutlined,ShopOutlined } from "@ant-design/icons";
-import { Avatar, Breadcrumb,Button,Card,Col,Descriptions,Divider,Modal,Row,Typography,Form,Input,InputNumber,DatePicker,message } from "antd";
+import { UserOutlined,ShopOutlined, UploadOutlined } from "@ant-design/icons";
+import { Avatar, Breadcrumb,Button,Card,Col,Descriptions,Divider,Modal,Row,Typography,Form,Input,InputNumber,DatePicker,message, Image, Upload } from "antd";
 import { BsPaypal } from "react-icons/bs";
 import {FcAlarmClock} from "react-icons/fc"
 import { RxDashboard } from "react-icons/rx";
 import {HiOutlineBuildingOffice2} from "react-icons/hi2"
 import { getUserProfile, userStore } from "../../store/userStore";
-import { NAIRA } from "../../utils/defaults";
+import { FALLBACK_IMAGE, NAIRA, SERVER_URL } from "../../utils/defaults";
 import { useState } from "react";
 import { extractNumberFromWord, formatCurrency, getAmountToPay, getUpperBoundAGTO } from "../../utils/helpers";
 import { useCreateInvoice } from "../../hooks/invoice";
 import { useCreatePayment } from "../../hooks/payment";
+import { useUploadImage } from "../../hooks/user";
 
 
 const {Title} = Typography;
@@ -37,6 +38,7 @@ export default function UserDashboard(){
 
     const generateInvoice = useCreateInvoice();
     const makePayment = useCreatePayment();
+    const uploadImage = useUploadImage();
 
     const currentUser = userStore(state=>state.user);
     const setUser = userStore(state=>state.setUser);
@@ -78,6 +80,17 @@ export default function UserDashboard(){
         setIsOpen(false);
     }
 
+
+    const handleFileUpload = async ({file})=>{
+        const formData = new FormData();
+        formData.append("image",file);
+        const response = await uploadImage(formData);
+        const {password,...userData} = await getUserProfile();
+        setUser(userData);
+        message.success(response);
+        setIsOpen(false);
+    }
+
     return(
         <>
             <div style={{height:"3em",backgroundColor:"white",padding:"1em",margin:"2em 0"}}>
@@ -97,25 +110,40 @@ export default function UserDashboard(){
                             User Details
                         </Title>
                         </Divider>
-                        <div>
-                            <Descriptions column={1}>
-                                <Descriptions.Item label="Fullname">
-                                    <b>{currentUser.firstname} {currentUser.lastname}</b>
-                                </Descriptions.Item>
-                                <Descriptions.Item label="E-mail">
-                                    <b>{currentUser.email}</b>
-                                </Descriptions.Item>
-                                <Descriptions.Item label="Phone number">
-                                   <b>{currentUser.phone}</b>
-                                </Descriptions.Item>
-                                <Descriptions.Item label="Tax Identity Number (TIN)">
-                                   <b>{currentUser.tin}</b>
-                                </Descriptions.Item>
-                                <Descriptions.Item label="Home Address">
-                                   <b>{currentUser.address}</b>
-                                </Descriptions.Item>
-                            </Descriptions>
-                        </div>
+                        <Row gutter={16}>
+                            <Col span={8}>
+                                <Image
+                                    height={150}
+                                    width={180}
+                                    src={`${SERVER_URL.replace("/api","")}/${currentUser.imageUrl}`}
+                                    fallback={FALLBACK_IMAGE}
+                                /> 
+                                <Upload customRequest={handleFileUpload} showUploadList={false}>
+                                    <Button style={{marginTop:"1em",backgroundColor:"#008000"}} type="primary" block>
+                                        Upload Picture
+                                    </Button>
+                                </Upload>
+                            </Col>
+                            <Col span={16}>
+                                <Descriptions column={1}>
+                                    <Descriptions.Item label="Fullname">
+                                        <b>{currentUser.firstname} {currentUser.lastname}</b>
+                                    </Descriptions.Item>
+                                    <Descriptions.Item label="E-mail">
+                                        <b>{currentUser.email}</b>
+                                    </Descriptions.Item>
+                                    <Descriptions.Item label="Phone number">
+                                    <b>{currentUser.phone}</b>
+                                    </Descriptions.Item>
+                                    <Descriptions.Item label="Tax Identity Number (TIN)">
+                                    <b>{currentUser.tin}</b>
+                                    </Descriptions.Item>
+                                    <Descriptions.Item label="Home Address">
+                                    <b>{currentUser.address}</b>
+                                    </Descriptions.Item>
+                                </Descriptions>
+                            </Col>
+                        </Row>
                     </Card>
                 </Col>
                 <Col span={14}>
