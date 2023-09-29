@@ -8,6 +8,7 @@ import { BsTrash } from "react-icons/bs";
 import { GoReport } from "react-icons/go";
 import {PieChart,Pie} from "recharts"
 import {usePayments } from "../../hooks/payment";
+import { EyeOutlined } from "@ant-design/icons";
 
 
 const {Title} = Typography;
@@ -66,6 +67,11 @@ const data01 = [
         key:"amount",
         dataIndex:"amount",
         render:(a)=> `${NAIRA} ${formatCurrency(a)}`
+    },
+    {
+        title:"Actions",
+        key:"action",
+        render: ()=><ViewReport/>
     }
   ]
 
@@ -92,6 +98,18 @@ const BREADCRUMB_ITEMS = [
 ];
 
 
+function ViewReport(){
+
+    return(
+        <>
+            <Space>
+                <Button icon={<EyeOutlined/>} type="primary" style={{backgroundColor:"#008000"}}/>
+            </Space>
+        </>
+    )
+}
+
+
 
 export default function Reports(){
 
@@ -100,7 +118,6 @@ export default function Reports(){
     const groupedDistrictPayments = groupBy(payments,p=>p.Invoice.Business.LocalGovernmentArea.District.id)
 
     const total = payments.reduce((prev,curr)=>prev+curr.amount,0);
-    console.log(total);
 
     const districtPaymentsArr = Object.keys(groupedDistrictPayments).map(k=>({
         district:groupedDistrictPayments[k]&&groupedDistrictPayments[k][0].Invoice.Business.LocalGovernmentArea.District.title,

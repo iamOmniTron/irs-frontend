@@ -3,12 +3,13 @@ import { FaMapLocationDot } from "react-icons/fa6"
 import { RxDashboard } from "react-icons/rx";
 import DataTable from "../../components/table";
 import {useState,useRef,useContext} from "react";
-import { PlusOutlined } from "@ant-design/icons";
+import { EyeOutlined, PlusOutlined } from "@ant-design/icons";
 import { useCreateDistrict, useDeleteDistrict, useDistricts, useUpdateDistrict } from "../../hooks/district";
 import RefreshContext from "../../context/refreshContext";
 import { extractValueFromInputRef } from "../../utils/helpers";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -72,6 +73,8 @@ function DistrictEdit({district}){
     const deleteDistrict = useDeleteDistrict();
     const updateDistrict = useUpdateDistrict();
 
+    const navigate = useNavigate();
+
     const titleRef = useRef(null);
     const valueRef = useRef(null);
 
@@ -79,6 +82,11 @@ function DistrictEdit({district}){
         await deleteDistrict(district.id);
         message.success("District deleted successfully");
         setFlag(!flag);
+    }
+
+
+    const navigateToLgas = ()=>{
+        navigate("/admin/district/lga",{state:district})
     }
 
 
@@ -98,6 +106,7 @@ function DistrictEdit({district}){
             <Space>
                 <Button icon={<BiEdit/>} type="primary" onClick={()=>setIsOpen(true)}/>
                 <Button icon={<BsTrash/>} type="primary" onClick={handleDelete} danger/>
+                <Button icon={<EyeOutlined/>} type="primary" style={{backgroundColor:"orange"}} onClick={navigateToLgas}/>
             </Space>
             <Modal title="Update District" footer={null} onCancel={()=>setIsOpen(false)} open={isOpen}>
                 <div>
@@ -127,6 +136,8 @@ function DistrictEdit({district}){
 export default function District(){
     const [isOpen,setIsOpen] = useState(false);
 
+
+
     const {flag,setFlag} = useContext(RefreshContext);
 
     const titleRef = useRef(null);
@@ -147,6 +158,8 @@ export default function District(){
         setIsOpen(false);
         setFlag(!flag);
     }
+
+
 
     return(
         <>

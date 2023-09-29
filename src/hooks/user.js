@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { mutate, query} from "../utils/fetch"
+import { mutate, query, update, upload} from "../utils/fetch"
 
 
 
@@ -32,4 +32,14 @@ export const useRegisterUser = ()=>{
         return message;
     }
     return register;
+}
+
+
+export const useUploadImage = ()=>{
+    const uploadImage = async (payload)=>{
+        const url = `user/update-image`;
+        const {message}= await upload(url,true,payload);
+        return message;
+    };
+    return uploadImage;
 }
