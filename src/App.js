@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {BrowserRouter as Router,Routes,Route} from "react-router-dom";
+import {BrowserRouter as Router,Routes,Route, Navigate} from "react-router-dom";
 import LoginUser from "./pages/auth/login";
 import RegisterUser from "./pages/auth/register";
 import LoginAdmin from "./pages/auth/loginAdmin";
@@ -26,18 +26,17 @@ import Business from "./pages/admin/business";
 import ViewBusiness from "./pages/admin/viewBusiness";
 import BusinessReport from "./pages/admin/businessReport";
 import Reports from "./pages/admin/report";
+import { AUTH_TOKEN_NAME } from "./utils/defaults";
 
-function App() {
-  const [flag,setFlag] = useState(false);
-  return (
-    <>
-    <RefreshContext.Provider value={{flag,setFlag}}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<LoginUser/>}/>
-          <Route path="/register" element={<RegisterUser/>} />
-          <Route path="/admin/login" element={<LoginAdmin/>}/>
-          <Route path="/admin" element={<AdminDashboardLayout/>}>
+
+
+const AuthRoutes = ()=>{
+
+  const token = sessionStorage.getItem(AUTH_TOKEN_NAME);
+
+  return !token ? <Navigate to="/admin/login"/> : <>
+    <Routes>
+        <Route path="/" element={<AdminDashboardLayout/>}>
             <Route path="" index element={<AdminDashboard/>}/>
             <Route path="district" element={<District/>}/>
             <Route path="lga" element={<LocalGovernmentAreas/>}/>
@@ -54,13 +53,32 @@ function App() {
             <Route path="view-business" element={<ViewBusiness/>}/>
             <Route path="reports" element={<Reports/>}/>
             <Route path="business-report" element={<BusinessReport/>}/>
+            <Route path="*" element={<Navigate to={"/admin/login"}/>}/>
           </Route>
+          <Route path="*" element={<Navigate to={"/admin/login"}/>}/>
+    </Routes>
+  </>
+}
+
+function App() {
+  const [flag,setFlag] = useState(false);
+  return (
+    <>
+    <RefreshContext.Provider value={{flag,setFlag}}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LoginUser/>}/>
+          <Route path="/register" element={<RegisterUser/>} />
+          <Route path="/admin/login" element={<LoginAdmin/>}/>
+          <Route path="/admin/*" element={<AuthRoutes/>}/>
           <Route path="/user" element={<UserDashboardLayout/>}>
             <Route path="" index element={<UserDashboard/>}/>
             <Route path="invoices" element={<UserInvoices/>}/>
             <Route path="payments" element={<UserPayments/>}/>
             <Route path="settings/password-reset" element={<ResetPassword/>}/>
+            <Route path="*" element={<Navigate to={"/"}/>}/>
           </Route>
+          <Route path="*" element={<Navigate to={"/"}/>}/>
         </Routes>
       </Router>
     </RefreshContext.Provider>

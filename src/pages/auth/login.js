@@ -74,11 +74,13 @@ export default function LoginUser(){
                        </Link>
                     </span>
                 </div>
-                <Col style={{height:"60%",width:"60%",backgroundColor:"#FFFFFF",borderRadius:"4px"}}>
-                    <Row>
-                        <Col span={14}>
-                            <Image preview={false} style={{backgroundSize:"cover",backgroundColor:"rgba(0,0,0,0.3)"}} src={Lafia} height={471} width={"100%"} alt="revenue image"/>
-                        </Col>
+                <Col style={{height:"60vh",width:"60%",backgroundColor:"#FFFFFF",borderRadius:"4px"}}>
+                    <Row style={{height:"60vh"}}>
+                        <Col span={14} style={{
+                            backgroundImage:'url("/lafia.jpg")',
+                            backgroundSize:"cover",
+                            backgroundRepeat:"no-repeat"
+                        }}/>
                         <Col span={10} style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"2em",gap:"1em"}}>
                                 <Avatar shape="square" src={Logo} size={120} style={{width:"80%"}}/>
                                 <Title level={3}>Login</Title>

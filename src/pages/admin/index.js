@@ -141,7 +141,7 @@ export default function AdminDashboard(){
                     Administrator
                 </Title>
             </div>
-            <Row style={{height:"30vh"}} gutter={16}>
+            <Row style={{height:"35vh"}} gutter={16}>
                 <Col span={6} style={{height:"100%"}}>
                     <Link to="/admin/business">
                         <Card style={{height:"100%",backgroundColor:"#008000",color:"white",display:"flex",flexDirection:"column",justifyContent:"space-between"}}>
@@ -189,11 +189,11 @@ export default function AdminDashboard(){
                     </Link>
                 </Col>
             </Row>
-            <div style={{marginTop:"4em",height:"50vh"}}>
+            <div style={{marginTop:"4em",height:"50vh",width:"50vw"}}>
                 <Title level={4} style={{marginBlock:"1em"}}>Generated Revenue By Local Government Areas</Title>
                     <Charts/>
             </div>
-            <div style={{marginTop:"4em",height:"50vh"}}>
+            <div style={{marginTop:"10em",height:"50vh"}}>
             <Title level={4} style={{marginBlock:"1em"}}>Businesses</Title>
             <div style={{paddingBottom:"2em"}}>
                 <DataTable cols={BUSINESS_DATA_COLS} data={businesses}/>

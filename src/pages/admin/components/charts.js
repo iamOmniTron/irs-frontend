@@ -69,7 +69,7 @@ const data = [
 export default function Charts(){
     return(
         <>
-  <BarChart width={1100} height={400} data={data}>
+  <BarChart width={900} height={400} data={data}>
     <CartesianGrid strokeDasharray="3 3" />
     <XAxis dataKey="name" />
     <YAxis />
