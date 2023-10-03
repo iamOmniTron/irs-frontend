@@ -25,7 +25,6 @@ export const useRegistration = ()=>{
     const register = async (body)=>{
         const url = `signup`;
         const {data} = await mutate(url,false,body);
-        console.log(data);
         return data;
     };
     return register;
@@ -47,4 +46,14 @@ export const useAdminResetPassword = ()=>{
         return response.message;
     };
     return resetPassword;
+};
+
+
+export const useConfirmOTP = ()=>{
+    const confirmOTP = async (id,body)=>{
+        const url = `/login/otp/${id}`;
+        const {data} = await mutate(url,true,body);
+        return data;
+    };
+    return confirmOTP;
 }

@@ -11,7 +11,7 @@ import {Link} from "react-router-dom"
 import { useBusinesses } from "../../hooks/business";
 import { usePayments } from "../../hooks/payment";
 import { NAIRA } from "../../utils/defaults";
-import { formatCurrency } from "../../utils/helpers";
+import { formatCurrency, groupBy } from "../../utils/helpers";
 
 
 const {Title} = Typography;
@@ -30,57 +30,57 @@ const BREADCRUMB_ITEMS = [
 
 
 
-const DUMMY_BUSINESS_DATA = [
-    {
-        id:1,
-        name:"Alaska groups ltd",
-        owner:"Mr. Adeyinka Benson",
-        registeredAt:"21 march 2012",
-        businessSize:"large",
-        ato:"above NGN 25,000,000"
-    },
-    {
-        id:2,
-        name:"God's Time Business",
-        owner:"Mr Adeleke Jamiu",
-        registeredAt:"10 september 2008",
-        businessSize:"medium",
-        ato:"below NGN 10,000,000"
-    },
-    {
-        id:3,
-        name:"Alaska groups ltd",
-        owner:"Mr. Adeyinka Benson",
-        registeredAt:"21 march 2012",
-        businessSize:"large",
-        ato:"above NGN 25,000,000"
-    },
-    {
-        id:4,
-        name:"God's Time Business",
-        owner:"Mr Adeleke Jamiu",
-        registeredAt:"10 september 2008",
-        businessSize:"medium",
-        ato:"below NGN 10,000,000"
-    },
-    {
-        id:5,
-        name:"Alaska groups ltd",
-        owner:"Mr. Adeyinka Benson",
-        registeredAt:"21 march 2012",
-        businessSize:"large",
-        ato:"above NGN 25,000,000"
-    },
-    {
-        id:6,
-        name:"God's Time Business",
-        owner:"Mr Adeleke Jamiu",
-        registeredAt:"10 september 2008",
-        businessSize:"medium",
-        ato:"below NGN 10,000,000"
-    },
+// const DUMMY_BUSINESS_DATA = [
+//     {
+//         id:1,
+//         name:"Alaska groups ltd",
+//         owner:"Mr. Adeyinka Benson",
+//         registeredAt:"21 march 2012",
+//         businessSize:"large",
+//         ato:"above NGN 25,000,000"
+//     },
+//     {
+//         id:2,
+//         name:"God's Time Business",
+//         owner:"Mr Adeleke Jamiu",
+//         registeredAt:"10 september 2008",
+//         businessSize:"medium",
+//         ato:"below NGN 10,000,000"
+//     },
+//     {
+//         id:3,
+//         name:"Alaska groups ltd",
+//         owner:"Mr. Adeyinka Benson",
+//         registeredAt:"21 march 2012",
+//         businessSize:"large",
+//         ato:"above NGN 25,000,000"
+//     },
+//     {
+//         id:4,
+//         name:"God's Time Business",
+//         owner:"Mr Adeleke Jamiu",
+//         registeredAt:"10 september 2008",
+//         businessSize:"medium",
+//         ato:"below NGN 10,000,000"
+//     },
+//     {
+//         id:5,
+//         name:"Alaska groups ltd",
+//         owner:"Mr. Adeyinka Benson",
+//         registeredAt:"21 march 2012",
+//         businessSize:"large",
+//         ato:"above NGN 25,000,000"
+//     },
+//     {
+//         id:6,
+//         name:"God's Time Business",
+//         owner:"Mr Adeleke Jamiu",
+//         registeredAt:"10 september 2008",
+//         businessSize:"medium",
+//         ato:"below NGN 10,000,000"
+//     },
     
-]
+// ]
 
 
 const BUSINESS_DATA_COLS = [
@@ -118,6 +118,12 @@ const BUSINESS_DATA_COLS = [
         dataIndex:"Tax",
         render:(t)=>t.GrossTurnOver.value
     },
+    {
+        title:"Applied On",
+        key:"appliedOn",
+        dataIndex:"createdAt",
+        render:(createdDate)=><text style={{color:"#008000"}}>{new Date(createdDate).toDateString()}</text>
+    }
 ]
 
 
@@ -127,10 +133,16 @@ export default function AdminDashboard(){
     const {lgas} = useLgas();
     const {businesses} = useBusinesses();
     const {payments} = usePayments();
+
+    const groupedLGAPayments = groupBy(payments,p=>p.Invoice.Business.LocalGovernmentId);
+    // TODO:continue from here by grouping by lga
+
     let total = 0;
     payments.forEach((p)=>{
         total+= +(p.amount)
     })
+
+    const unregisteredBusinesses =  businesses.filter(b=>b.isRegistered === false)
     return(
         <>
         <div style={{height:"3em",backgroundColor:"white",padding:"1em",margin:"2em 0"}}>
@@ -194,9 +206,9 @@ export default function AdminDashboard(){
                     <Charts/>
             </div>
             <div style={{marginTop:"10em",height:"50vh"}}>
-            <Title level={4} style={{marginBlock:"1em"}}>Businesses</Title>
+            <Title level={4} style={{marginBlock:"1em"}}>Pending Businesses</Title>
             <div style={{paddingBottom:"2em"}}>
-                <DataTable cols={BUSINESS_DATA_COLS} data={businesses}/>
+                <DataTable cols={BUSINESS_DATA_COLS} data={unregisteredBusinesses}/>
             </div>
             </div>
         </>

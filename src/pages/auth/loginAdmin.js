@@ -67,6 +67,7 @@ export default function LoginAdmin(){
                     width:"25vw",
                     height:"50vh",
                     position:"relative",
+                    marginTop:"10vh"
                 }}>
                     <Avatar size={112} icon={<RiAdminLine/>} 
                     style={{position:"absolute",top:"-2em",left:"30%",zIndex:"2000",backgroundColor:"gray",boxShadow:"0px 3px 21px -1px rgba(0,0,0,0.75)"}}

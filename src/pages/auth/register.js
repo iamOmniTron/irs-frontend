@@ -88,8 +88,6 @@ export default function RegisterUser(){
     const lastnameRef = useRef(null);
     const emailRef =  useRef(null);
     const phoneRef =  useRef(null);
-    const passRef =  useRef(null);
-    const confPassRef =  useRef(null);
     const homeTownRef =  useRef(null);
     const homeAddressRef =  useRef(null);
     const busnameRef =  useRef(null);
@@ -107,8 +105,6 @@ export default function RegisterUser(){
             lastname:extractValueFromInputRef(lastnameRef),
             email:extractValueFromInputRef(emailRef),
             phone:extractValueFromInputRef(phoneRef),
-            password:extractValueFromInputRef(passRef),
-            confirmPassword:extractValueFromInputRef(confPassRef),
             gender,
             homeTown:extractValueFromInputRef(homeTownRef),
             address:extractValueFromInputRef(homeAddressRef)
@@ -154,7 +150,7 @@ export default function RegisterUser(){
                             Login
                         </Link>
                 </div>
-                <Card title={steps[currentStep].title} style={{width:"60vw",height:"50vh"}}>
+                <Card title={steps[currentStep].title} style={{width:"60vw",height:"55vh"}}>
                     <Form form={form} name="validateOnly" style={{display:`${currentStep === 0?"block":"none"}`}}>
                     <Row gutter={8} style={{height:"5em"}}>
                         <Col span={8}>
@@ -189,7 +185,7 @@ export default function RegisterUser(){
                         </Col>
                     </Row>
                     <Row gutter={8}>
-                        <Col span={8}>
+                        <Col span={24}>
                             <Form.Item name="email" rules={[
                                 {
                                     required:true,
@@ -197,26 +193,6 @@ export default function RegisterUser(){
                                 }
                             ]}>
                                 <Input ref={emailRef} type="email" placeholder="enter email"/>
-                            </Form.Item>
-                        </Col>
-                        <Col span={8}>
-                        <Form.Item name="password" rules={[
-                                {
-                                    required:true,
-                                    message:"This field is required"
-                                }
-                            ]}>
-                                <Input.Password ref={passRef} placeholder="enter password"/>
-                            </Form.Item>
-                        </Col>
-                        <Col span={8}>
-                        <Form.Item name="confirmPassword" rules={[
-                                {
-                                    required:true,
-                                    message:"This field is required"
-                                }
-                            ]}>
-                                <Input.Password ref={confPassRef} placeholder="re-enter password"/>
                             </Form.Item>
                         </Col>
                     </Row>
@@ -258,7 +234,7 @@ export default function RegisterUser(){
                         </Col>
                     </Row>
                     </Form>
-                            <Form form={form} style={{marginTop:"1em",display:`${currentStep === 1?"block":"none"}`}}>
+                            <Form form={form} style={{display:`${currentStep === 1?"block":"none"}`}}>
                                 <Form.Item name="businessName" rules={[
                                 {
                                     required:true,

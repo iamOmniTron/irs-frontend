@@ -1,13 +1,12 @@
 import { Breadcrumb,Typography,Spin, Button,} from "antd"
 import { RxDashboard } from "react-icons/rx";
 import DataTable from "../../components/table";
-import {useState,useContext} from "react";
+import {FaUserPlus} from "react-icons/fa"
 import { EyeOutlined, PlusOutlined } from "@ant-design/icons";
 import RefreshContext from "../../context/refreshContext";
 import { RiUserSettingsLine } from "react-icons/ri";
 import { useUsers } from "../../hooks/user";
 import { useNavigate } from "react-router-dom";
-
 
 const {Title} = Typography;
 
@@ -26,8 +25,8 @@ const BREADCRUMB_ITEMS = [
         key:2,
         title:(
             <>
-                <RiUserSettingsLine/>
-                Users
+                <FaUserPlus/>
+                Applications
             </>
         )
     }
@@ -42,7 +41,7 @@ const USER_COLS = [
     {
         title:"Name",
         key:"name",
-        render:(_,{firstname,lastname})=>`${firstname} ${lastname}`
+        render:(_,{gender,firstname,lastname})=>`${gender === "male"?"Mr.":"Mrs."} ${firstname} ${lastname}`
     },
     {
         title:"Tax Identity Number (TIN)",
@@ -75,7 +74,7 @@ const USER_COLS = [
 
 function UserEdit({user}){
     const navigate = useNavigate();
-    const navigateToUser = ()=>navigate("/admin/user",{state:user})
+    const navigateToUser = ()=>navigate("/admin/user/new",{state:user})
     return(
         <>
             <Button icon={<EyeOutlined/>} type="primary" style={{backgroundColor:"#008000"}} onClick={navigateToUser}/>
@@ -85,15 +84,10 @@ function UserEdit({user}){
 
 
 
+export default function UnRegisteredUsers(){
+    const {users,loading} = useUsers();
 
-export default function Users(){
-    const {flag} = useContext(RefreshContext);
-
-    const {loading,users} =  useUsers(flag);
-
-    const registered = (users ?? []).filter((u)=>u.isConfirmed === true);
-
-
+    const unregistered = users.filter((u)=>u.isConfirmed === false);
     return (
         <>
             <div style={{height:"3em",backgroundColor:"white",padding:"1em",margin:"2em 0"}}>
@@ -101,14 +95,14 @@ export default function Users(){
             </div>
             <div style={{padding:"0 1em",display:"flex",justifyContent:"space-between"}}>
                 <Title level={3}>
-                    Users
+                    UNREGISTERED USERS
                 </Title>
             </div>
             <div style={{marginTop:"2em"}}>
                 <Spin spinning={loading}>    
-                    <DataTable cols={USER_COLS} data={registered} />
+                    <DataTable cols={USER_COLS} data={unregistered} />
                 </Spin>
             </div>
         </>
     )
-}
+} 

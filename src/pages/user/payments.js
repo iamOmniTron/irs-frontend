@@ -8,6 +8,7 @@ import { useMyPayments } from "../../hooks/payment";
 import { NAIRA } from "../../utils/defaults";
 import { formatCurrency } from "../../utils/helpers";
 import {useNavigate} from "react-router-dom";
+import { EyeOutlined } from "@ant-design/icons";
 
 
 const {Option} = Select;
@@ -50,6 +51,11 @@ const INVOICE_COLS = [
         key:"status",
         dataIndex:"Invoice",
         render:(s)=>s.status === "pending" ?<Tag color="red">{s.status}</Tag>:<Tag color="green">{s.status}</Tag>
+    },
+    {
+        title:"Actions",
+        key:"actions",
+        render:(_,p)=><PreviewPayment payment={p}/>
     }
 ]
 
@@ -73,7 +79,19 @@ const BREADCRUMB_ITEMS = [
             </>
         )
     }
-]
+];
+
+
+function PreviewPayment({payment}){
+        const navigate = useNavigate();
+
+        const handlePreview = ()=>navigate("/payment/reciept",{state:payment})
+    return(
+        <>
+            <Button icon={<EyeOutlined/>} type="primary" onClick={handlePreview}/>
+        </>
+    )
+}
 
 
 
@@ -88,7 +106,6 @@ export default function UserPayments(){
 
 
     const {loading,payments} = useMyPayments();
-    console.log(payments)
     return(
         <>
             <div style={{height:"3em",backgroundColor:"white",padding:"1em",margin:"2em 0"}}>

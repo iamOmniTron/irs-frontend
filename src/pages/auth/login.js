@@ -1,50 +1,69 @@
-import {Row,Col,Button,Form,Typography,Image,message, Avatar, Input} from "antd"
+import {Row,Col,Button,Form,Typography,Image,message, Avatar, Input,Statistic} from "antd"
 import {UserOutlined,QuestionCircleOutlined} from "@ant-design/icons";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import Lafia from "../../assets/lafia.jpg";
+// import Lafia from "../../assets/lafia.jpg";
+import {BsShieldLockFill} from "react-icons/bs"
 import Logo from "../../assets/nsirs.webp";
 import { userStore,getUserProfile } from "../../store/userStore";
 import { extractValueFromInputRef } from "../../utils/helpers";
-import { AUTH_TOKEN_NAME } from "../../utils/defaults";
+import { AUTH_TOKEN_NAME, OTP_TOKEN_DEADLINE } from "../../utils/defaults";
 import { useRef,useState } from "react";
-import { useLogin } from "../../hooks/auth";
+import { useConfirmOTP, useLogin } from "../../hooks/auth";
 
 const {Title,Link} = Typography;
+const {Countdown} = Statistic;
 
 
 
 export default function LoginUser(){
     const [loading,setLoading] = useState(false);
+    const [userId,setUserId] = useState("");
     const navigate = useNavigate();
 
     const setUser = userStore(state=>state.setUser);
-
+    const user = userStore(state=>state.user);
     const emailRef = useRef(null);
-    const passRef = useRef(null);
+    const codeRef = useRef(null);
 
 
     const loginUser = useLogin();
+    const confirmOTP = useConfirmOTP();
 
     const login = async ()=>{
+        try {
+            setLoading(true);
+            const payload = {
+                email:extractValueFromInputRef(emailRef),
+            }
+            const response = await loginUser(payload);
+            setUserId(response);
+            setLoading(false);
+            message.success("OTP sent successfully");
+        } catch (error) {
+            setLoading(false);
+            message.error(error.message);
+        }
+    }
+
+    const handleOTP = async ()=>{
         setLoading(true);
         const payload = {
-            email:extractValueFromInputRef(emailRef),
-            password:extractValueFromInputRef(passRef)
-        }
-        const responseToken = await loginUser(payload);
-        if(!responseToken){
+            code:extractValueFromInputRef(codeRef)
+        };
+        const response = await confirmOTP(user.id,payload);
+        if(!response){
             setLoading(false);
             return;
         }
-        sessionStorage.setItem(AUTH_TOKEN_NAME,responseToken);
+        sessionStorage.setItem(AUTH_TOKEN_NAME,response);
         message.success("User Logged in successfully");
-        setTimeout(async()=>{
-            const {password,...userData} = await getUserProfile();
-            message.success("Redirecting to Dashboard...")
+        message.success("Redirecting to Dashboard...")
+         setTimeout(async()=>{
+            const userData = await getUserProfile();
             setUser(userData);
             setLoading(false);
             return navigate("/user")
-        },2000)
+        },1200)
     }
 
 
@@ -73,30 +92,59 @@ export default function LoginUser(){
                         Help
                        </Link>
                     </span>
+                    <span>
+                        <RouterLink style={{color:"white"}} to="/admin/login">
+                            <BsShieldLockFill/>
+                            Admin
+                        </RouterLink>
+                    </span>
                 </div>
                 <Col style={{height:"60vh",width:"60%",backgroundColor:"#FFFFFF",borderRadius:"4px"}}>
                     <Row style={{height:"60vh"}}>
                         <Col span={14} style={{
                             backgroundImage:'url("/lafia.jpg")',
                             backgroundSize:"cover",
-                            backgroundRepeat:"no-repeat"
+                            backgroundRepeat:"no-repeat",
+                            backgroundPosition: "center top"
                         }}/>
-                        <Col span={10} style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"2em",gap:"1em"}}>
+                        <Col span={10} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"1em"}}>
                                 <Avatar shape="square" src={Logo} size={120} style={{width:"80%"}}/>
+                                {
+                                    !userId &&
+                                    <>
                                 <Title level={3}>Login</Title>
                                 <Form>
                                     <Form.Item>
                                         <Input ref={emailRef} type="email" placeholder="enter your e-mail"/>
                                     </Form.Item>
                                     <Form.Item>
-                                        <Input.Password ref={passRef} placeholder="enter your password"/>
-                                    </Form.Item>
-                                    <Form.Item>
-                                        <Button onClick={login} type="primary" block style={{backgroundColor:"#008000"}}>
+                                        <Button loading={loading} onClick={login} type="primary" block style={{backgroundColor:"#008000"}}>
                                             Login
                                         </Button>
                                     </Form.Item>
                                 </Form>
+                                    </>
+                                }
+                                
+                                { 
+                                userId &&
+                                    <>
+                                        <Title level={3}>Confirm Login</Title>
+                                        <Form>
+                                            <Form.Item>
+                                                <Input ref={codeRef} placeholder="enter OTP"/>
+                                            </Form.Item>
+                                            <Form.Item>
+                                        <Button loading={loading} onClick={handleOTP} type="primary" block style={{backgroundColor:"#008000"}}>
+                                            Confirm OTP
+                                        </Button>
+                                        <div style={{textAlign:"center",marginTop:"1em"}}>
+                                                    <Countdown prefix={"expires in:"} valueStyle={{fontSize:20}} value={Date.now() + OTP_TOKEN_DEADLINE} format="mm:ss" onFinish={()=>console.log("done")}/>
+                                                </div>
+                                    </Form.Item>
+                                        </Form>
+                                    </>
+                                }
                         </Col>
                     </Row>
                 </Col>

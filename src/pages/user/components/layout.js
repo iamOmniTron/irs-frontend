@@ -31,18 +31,18 @@ const NAV_ITEMS = [
         label:<Link to="/user/payments" style={{color:"white"}}><b>Payments</b></Link>,
         icon:<BsPaypal style={{fontSize:20,color:"white"}}/>
     },
-    {
-        key:"settings",
-        label:<b style={{color:"white"}}>Settings</b>,
-        icon:<AiOutlineSetting style={{fontSize:20,color:"white"}}/>,
-        children:[
-            {
-                key:"passReset",
-                icon:<AiOutlineUnlock style={{fontSize:20,color:"black"}}/>,
-                label:<Link to="/user/settings/password-reset" style={{color:"black"}}><b>Reset Password</b></Link>
-            }
-        ]
-    },
+    // {
+    //     key:"settings",
+    //     label:<b style={{color:"white"}}>Settings</b>,
+    //     icon:<AiOutlineSetting style={{fontSize:20,color:"white"}}/>,
+    //     children:[
+    //         {
+    //             key:"passReset",
+    //             icon:<AiOutlineUnlock style={{fontSize:20,color:"black"}}/>,
+    //             label:<Link to="/user/settings/password-reset" style={{color:"black"}}><b>Reset Password</b></Link>
+    //         }
+    //     ]
+    // },
 ]
 
 export default function UserDashboardLayout(){

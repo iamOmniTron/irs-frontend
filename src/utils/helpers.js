@@ -1,4 +1,5 @@
-import { TIME } from "./defaults";
+import { NAIRA, TIME } from "./defaults";
+import {ToWords} from "to-words";
 
 export const formatCurrency = (amount) => new Intl.NumberFormat().format(amount);
 
@@ -76,4 +77,27 @@ export const getPercentageRatio = (amount,total)=>{
     return Math.round(numerator/total);
 }
 
+/**
+ * 
+ * @param {Array} x Array of items to be sorted
+ * @param {Function} f The grouping function
+ * @returns Object
+ */
 export const groupBy = (x,f)=>x.reduce((a,b,i)=>((a[f(b,i,x)]||=[]).push(b),a),{});
+
+
+export const convertToWords = (number)=>{
+    const num = Number(number);
+    const toWords = new ToWords({
+        localeCode:"en-NG",
+        converterOptions:{
+            currency:true,
+            currencyOptions:{
+                name: 'Naira',
+                plural: 'Naira',
+                symbol: NAIRA,
+            }
+        }
+    })
+    return toWords.convert(num,{currency:true})
+}

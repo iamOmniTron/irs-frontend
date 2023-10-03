@@ -28,8 +28,14 @@ import BusinessReport from "./pages/admin/businessReport";
 import Reports from "./pages/admin/report";
 import { AUTH_TOKEN_NAME } from "./utils/defaults";
 import DistrictLGA from "./pages/admin/districtLga";
+import UnRegisteredUsers from "./pages/admin/unregisteredUsers";
+import UnRegisteredUser from "./pages/admin/unregisteredUser";
+import Sessions from "./pages/admin/sessions";
+import UnregisteredUserPage from "./pages/user/unregistered";
+import { userStore } from "./store/userStore";
+import PaymentReciept from "./components/reciept";
 
-function AuthRoutes(){
+function AuthAdminRoutes(){
 
   const token = sessionStorage.getItem(AUTH_TOKEN_NAME);
 
@@ -53,13 +59,40 @@ function AuthRoutes(){
               <Route path="view-business" element={<ViewBusiness/>}/>
               <Route path="district/lga" element={<DistrictLGA/>}/>
               <Route path="reports" element={<Reports/>}/>
+              <Route path="user/new" element={<UnRegisteredUser/>}/>
+              <Route path="users/new" element={<UnRegisteredUsers/>}/>
               <Route path="business-report" element={<BusinessReport/>}/>
+              <Route path="users/sessions" element={<Sessions/>}/>
               <Route path="*" element={<Navigate to="/admin/login"/>}/>
             </Route>
               <Route path="*" element={<Navigate to="/admin/login"/>}/>
       </Routes>
   </>
 }
+
+const AuthUserRoutes = ()=>{
+  const user = userStore(state=>state.user);
+
+  return user.id? <>
+    <Routes>
+          <Route path="/" element={<UserDashboardLayout/>}>
+            <Route path="" index element={<UserDashboard/>}/>
+            <Route path="invoices" element={<UserInvoices/>}/>
+            <Route path="payments" element={<UserPayments/>}/>
+            <Route path="settings/password-reset" element={<ResetPassword/>}/>
+            <Route path="*" element={<Navigate to={"/"}/>}/>
+          </Route>
+          <Route path="*" element={<Navigate to={"/"}/>}/>
+    </Routes>
+  </>  :
+    <Routes>
+          <Route path="/welcome" element={<UnregisteredUserPage/>}/>
+          <Route path="/" element={<LoginUser/>}/>
+          <Route path="*" element={<Navigate to={"/"}/>}/>
+    </Routes>
+}
+
+
 
 function App() {
   const [flag,setFlag] = useState(false);
@@ -71,14 +104,9 @@ function App() {
           <Route path="/" element={<LoginUser/>}/>
           <Route path="/register" element={<RegisterUser/>} />
           <Route path="/admin/login" element={<LoginAdmin/>}/>
-          <Route path="/admin/*" element={<AuthRoutes/>}/>
-          <Route path="/user" element={<UserDashboardLayout/>}>
-            <Route path="" index element={<UserDashboard/>}/>
-            <Route path="invoices" element={<UserInvoices/>}/>
-            <Route path="payments" element={<UserPayments/>}/>
-            <Route path="settings/password-reset" element={<ResetPassword/>}/>
-            <Route path="*" element={<Navigate to={"/"}/>}/>
-          </Route>
+          <Route path="/admin/*" element={<AuthAdminRoutes/>}/>
+          <Route path="/user/*" element={<AuthUserRoutes/>}/>
+          <Route path="/payment/reciept" element={<PaymentReciept/>}/>
         </Routes>
       </Router>
     </RefreshContext.Provider>

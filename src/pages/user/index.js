@@ -114,7 +114,7 @@ export default function UserDashboard(){
                             <Col span={8}>
                                 <Image
                                     height={150}
-                                    width={180}
+                                    width={150}
                                     src={`${SERVER_URL.replace("/api","")}/${currentUser.imageUrl}`}
                                     fallback={FALLBACK_IMAGE}
                                 /> 

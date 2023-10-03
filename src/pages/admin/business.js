@@ -73,6 +73,12 @@ const BUSINESS_COLS = [
         render:(t)=>t.GrossTurnOver.value
     },
     {
+        title:"Status",
+        key:"status",
+        dataIndex:"isRegistered",
+        render:(s)=>!s? <Tag color="red">Not Registered</Tag>:<Tag color="green">Registered</Tag>
+    },
+    {
         title:"Actions",
         key:"actions",
         render:(_,business)=><BusinessEdit business={business}/>

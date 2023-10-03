@@ -2,10 +2,10 @@ import { Layout,Menu,Tooltip,Button,Avatar,message } from "antd";
 import { RxDashboard } from "react-icons/rx";
 import {RiUserSettingsLine} from "react-icons/ri";
 import {BsShopWindow,BsFillBuildingsFill, BsPaypal,BsGraphUpArrow,BsPeopleFill, BsGlobe} from "react-icons/bs";
-import {FaFileInvoiceDollar,FaCog,FaCoins,FaUserCircle} from "react-icons/fa"
+import {FaFileInvoiceDollar,FaUserPlus,FaCog,FaCoins,FaUserCircle} from "react-icons/fa"
 import {FaMapLocationDot} from "react-icons/fa6"
 import {MdFormatSize,MdLocationPin} from "react-icons/md";
-import {CgLink} from "react-icons/cg";
+import {LiaBusinessTimeSolid} from "react-icons/lia";
 import {SlOrganization} from "react-icons/sl";
 import {RiUserLocationFill} from "react-icons/ri";
 import {GoReport} from "react-icons/go"
@@ -34,6 +34,16 @@ const SIDEBAR_MENU_ITEMS = [
                 key:"manage-users",
                 label:<Link to="/admin/users"><b>Manage Users</b></Link>,
                 icon:<RiUserSettingsLine/>
+            },
+            {
+                key:"user-sessions",
+                label:<Link to="/admin/users/sessions"><b>Login Activities</b></Link>,
+                icon:<LiaBusinessTimeSolid/>
+            },
+            {
+                key:"new-users",
+                label:<Link to="/admin/users/new"><b>New Applications</b></Link>,
+                icon:<FaUserPlus/>
             }
         ]
     },

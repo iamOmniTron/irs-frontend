@@ -43,3 +43,33 @@ export const useUploadImage = ()=>{
     };
     return uploadImage;
 }
+
+
+export const useApproveUser = ()=>{
+    const approveUser = async (id)=>{
+        const url = `user/approve/${id}`;
+        const {message} = await update(url,null);
+        return message;
+    };
+    return approveUser;
+}
+
+
+export const useLoginSessions = (flag)=>{
+    const [loading,setLoading]= useState(false);
+    const [sessions,setSessions] = useState([]);
+
+    useEffect(()=>{
+        const getSessions = async ()=>{
+            setLoading(true)
+            const url = `/activity/login/get-all`;
+            const {data} = await query(url);
+            setSessions(data);
+            setLoading(false);
+        }
+        getSessions();
+    },[flag]);
+    return {
+        loading,sessions
+    }
+}
