@@ -1,72 +1,72 @@
 import {BarChart,Bar,Legend,Tooltip,YAxis,XAxis,CartesianGrid} from "recharts"
 
 
-const data = [
-    {
-      "name": "Keffi",
-      "uv": 4000,
-      "revenue": 2400
-    },
-    {
-      "name": "Lafia",
-      "uv": 3000,
-      "revenue": 1398
-    },
-    {
-      "name": "Awe",
-      "uv": 2000,
-      "revenue": 9800
-    },
-    {
-      "name": "Karu",
-      "uv": 2780,
-      "revenue": 3908
-    },
-    {
-      "name": "Nasarawa",
-      "uv": 1890,
-      "revenue": 4800
-    },
-    {
-      "name": "Kokona",
-      "uv": 2390,
-      "revenue": 3800
-    },
-    {
-      "name": "Akwanga",
-      "uv": 3490,
-      "revenue": 4300
-    }
-    ,
-    {
-      "name": "Awe",
-      "uv": 2000,
-      "revenue": 9800
-    },
-    {
-      "name": "Karu",
-      "uv": 2780,
-      "revenue": 3908
-    },
-    {
-      "name": "Nasarawa",
-      "uv": 1890,
-      "revenue": 4800
-    },
-    {
-      "name": "Kokona",
-      "uv": 2390,
-      "revenue": 3800
-    },
-    {
-      "name": "Akwanga",
-      "uv": 3490,
-      "revenue": 4300
-    }
-  ]
+// const data = [
+//     {
+//       "name": "Keffi",
+//       "uv": 4000,
+//       "revenue": 2400
+//     },
+//     {
+//       "name": "Lafia",
+//       "uv": 3000,
+//       "revenue": 1398
+//     },
+//     {
+//       "name": "Awe",
+//       "uv": 2000,
+//       "revenue": 9800
+//     },
+//     {
+//       "name": "Karu",
+//       "uv": 2780,
+//       "revenue": 3908
+//     },
+//     {
+//       "name": "Nasarawa",
+//       "uv": 1890,
+//       "revenue": 4800
+//     },
+//     {
+//       "name": "Kokona",
+//       "uv": 2390,
+//       "revenue": 3800
+//     },
+//     {
+//       "name": "Akwanga",
+//       "uv": 3490,
+//       "revenue": 4300
+//     }
+//     ,
+//     {
+//       "name": "Awe",
+//       "uv": 2000,
+//       "revenue": 9800
+//     },
+//     {
+//       "name": "Karu",
+//       "uv": 2780,
+//       "revenue": 3908
+//     },
+//     {
+//       "name": "Nasarawa",
+//       "uv": 1890,
+//       "revenue": 4800
+//     },
+//     {
+//       "name": "Kokona",
+//       "uv": 2390,
+//       "revenue": 3800
+//     },
+//     {
+//       "name": "Akwanga",
+//       "uv": 3490,
+//       "revenue": 4300
+//     }
+//   ]
   
 
-export default function Charts(){
+export default function Charts({data}){
     return(
         <>
   <BarChart width={900} height={400} data={data}>
@@ -75,7 +75,7 @@ export default function Charts(){
     <YAxis />
     <Tooltip />
     <Legend />
-    <Bar dataKey="revenue" fill="#008000" />
+    <Bar dataKey="amount" fill="#008000" />
   </BarChart>
         </>
     )

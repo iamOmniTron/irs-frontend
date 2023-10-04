@@ -73,7 +73,7 @@ function AuthAdminRoutes(){
 const AuthUserRoutes = ()=>{
   const user = userStore(state=>state.user);
 
-  return user.id? <>
+  return user.isConfirmed? <>
     <Routes>
           <Route path="/" element={<UserDashboardLayout/>}>
             <Route path="" index element={<UserDashboard/>}/>
@@ -86,8 +86,7 @@ const AuthUserRoutes = ()=>{
     </Routes>
   </>  :
     <Routes>
-          <Route path="/welcome" element={<UnregisteredUserPage/>}/>
-          <Route path="/" element={<LoginUser/>}/>
+          <Route path="/" element={<UnregisteredUserPage/>}/>
           <Route path="*" element={<Navigate to={"/"}/>}/>
     </Routes>
 }

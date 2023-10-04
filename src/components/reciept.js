@@ -2,7 +2,7 @@ import { Avatar, Descriptions,QRCode,Typography } from "antd";
 import Logo from "../assets/nsirs.webp"
 import { NAIRA } from "../utils/defaults";
 import { convertToWords, formatCurrency } from "../utils/helpers";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 
 
@@ -12,6 +12,11 @@ const {Title} = Typography;
 export default function PaymentReciept(){
 
     const {state:payment} = useLocation();
+    const [searchParams] = useSearchParams();
+
+    const ref = searchParams.get("ref");
+
+    console.log(ref);
 
     if(!payment){
         return <Navigate to={"/"}/>

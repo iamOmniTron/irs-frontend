@@ -50,7 +50,7 @@ export default function LoginUser(){
         const payload = {
             code:extractValueFromInputRef(codeRef)
         };
-        const response = await confirmOTP(user.id,payload);
+        const response = await confirmOTP(userId,payload);
         if(!response){
             setLoading(false);
             return;

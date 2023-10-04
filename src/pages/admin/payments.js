@@ -1,16 +1,17 @@
-import { Breadcrumb,Typography,Spin, Tag, Modal, Form, Input, message, Space } from "antd"
+import { Breadcrumb,Typography,Spin, Tag, Modal, Form, Input, message, Space, Button } from "antd"
 import { FaMapLocationDot } from "react-icons/fa6"
 import { RxDashboard } from "react-icons/rx";
 import DataTable from "../../components/table";
 import {useState,useRef,useContext} from "react";
-import { PlusOutlined } from "@ant-design/icons";
+import { EyeOutlined, PlusOutlined } from "@ant-design/icons";
 import RefreshContext from "../../context/refreshContext";
-import { extractValueFromInputRef } from "../../utils/helpers";
+import { encryptData, extractValueFromInputRef } from "../../utils/helpers";
 import { BsPaypal, BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import { usePayments } from "../../hooks/payment";
 import { formatCurrency } from "../../utils/helpers";
 import { NAIRA } from "../../utils/defaults";
+import { useNavigate } from "react-router-dom";
 
 
 const {Title} = Typography;
@@ -77,8 +78,26 @@ const PAYMENTS_COLS = [
         key:"status",
         dataIndex:"Invoice",
         render:(s)=>s.status === "pending" ?<Tag color="red">{s.status}</Tag>:<Tag color="green">{s.status}</Tag>
+    },
+    {
+        title:"Actions",
+        key:"actions",
+        render:(_,p)=><AdminViewPayment payment={p}/>
     }
-]
+];
+
+
+function AdminViewPayment({payment}){   
+    const navigate = useNavigate();
+    const serializedData = JSON.stringify(payment);
+    const tokenizedData = async ()=> await encryptData(serializedData);
+    const navigateToPayment = ()=>navigate(`/payment/reciept/`,{state:payment})
+    return(
+        <>
+            <Button icon={<EyeOutlined/>} type="primary" onClick={navigateToPayment}/>
+        </>
+    )
+}
 
 
 

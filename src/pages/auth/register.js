@@ -15,6 +15,7 @@ import { useRegistration } from "../../hooks/auth";
 const {Title} = Typography;
 const {Option} = Select;
 
+
 const steps = [
     {
         title:"User Information"
@@ -131,25 +132,26 @@ export default function RegisterUser(){
 
     return(
         <>
-            <Row style={{
+            <Col style={{
                 width:"100vw",
                 height:"100vh",
+                overflowY:"scroll",
                 backgroundColor:"#008000",
                 display:"flex",
                 justifyContent:"center",
                 alignItems:"center",
                 flexDirection:"column"
             }}>
-                <div style={{width:"15vw",marginBottom:"1em"}}>
-                    <Avatar shape="square" src={Logo} size={90} style={{width:"100%"}}/>
-                </div>
-                <Title level={3} style={{color:"white",marginBottom:"1em"}}>User Registration</Title>
-                <div style={{width:"57vw",textAlign:"end"}}>
-                        <Link to="/" style={{color:"white"}}>
-                            <LockOutlined />
-                            Login
-                        </Link>
-                </div>
+                    <div style={{width:"15vw",marginBottom:"1em"}}>
+                        <Avatar shape="square" src={Logo} size={90} style={{width:"100%"}}/>
+                    </div>
+                    <Title level={3} style={{color:"white",marginBottom:"1em"}}>User Registration</Title>
+                    <div style={{width:"57vw",textAlign:"end"}}>
+                            <Link to="/" style={{color:"white"}}>
+                                <LockOutlined />
+                                Login
+                            </Link>
+                    </div>
                 <Card title={steps[currentStep].title} style={{width:"60vw",height:"55vh"}}>
                     <Form form={form} name="validateOnly" style={{display:`${currentStep === 0?"block":"none"}`}}>
                     <Row gutter={8} style={{height:"5em"}}>
@@ -388,7 +390,7 @@ export default function RegisterUser(){
                     <NextButton form={form} next={next} step={currentStep}/>
                 </Space>
                 </Form>
-            </Row>
+            </Col>
         </>
     )
 }

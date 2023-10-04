@@ -11,7 +11,7 @@ export default function UnregisteredUserPage(){
     const navigate = useNavigate();
 
     const goToLogin =()=> navigate("/");
-    // const refresh = ()=>
+    const refresh = ()=> window.location.reload();
 
     return(
         <>
@@ -41,7 +41,7 @@ export default function UnregisteredUserPage(){
                         <ArrowLeftOutlined/>
                         Log out
                     </Button>
-                    <Button type="text">
+                    <Button type="text" onClick={refresh}>
                         <ReloadOutlined/>
                         Refresh
                     </Button>

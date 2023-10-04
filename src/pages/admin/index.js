@@ -134,8 +134,28 @@ export default function AdminDashboard(){
     const {businesses} = useBusinesses();
     const {payments} = usePayments();
 
-    const groupedLGAPayments = groupBy(payments,p=>p.Invoice.Business.LocalGovernmentId);
+    const groupedLGAPayments = groupBy(payments,p=>p.Invoice.Business.LocalGovernmentAreaId);
     // TODO:continue from here by grouping by lga
+
+
+    // let graphData = [];
+
+    const graphData = lgas.map(l=>({
+        id:l.id,
+        name:l.value,
+        amount:groupedLGAPayments[l.id]?.map((p)=>p.amount).reduce((prev,curr)=>curr+prev,0)??0
+    }))
+
+    // lgas.forEach((l)=>{
+    //     let obj = {
+    //         id:l.id,
+    //         name:l.value,
+            // amount:groupedLGAPayments[l.id].amount??0
+    //     }
+    //     d.push(obj)
+    // })
+
+    // console.log(groupedLGAPayments[10]?.map((p)=>p.amount))
 
     let total = 0;
     payments.forEach((p)=>{
@@ -203,7 +223,7 @@ export default function AdminDashboard(){
             </Row>
             <div style={{marginTop:"4em",height:"50vh",width:"50vw"}}>
                 <Title level={4} style={{marginBlock:"1em"}}>Generated Revenue By Local Government Areas</Title>
-                    <Charts/>
+                    <Charts data={graphData}/>
             </div>
             <div style={{marginTop:"10em",height:"50vh"}}>
             <Title level={4} style={{marginBlock:"1em"}}>Pending Businesses</Title>

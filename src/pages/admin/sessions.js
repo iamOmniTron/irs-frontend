@@ -65,6 +65,8 @@ const SESSION_COLS = [
 
 export default function Sessions(){
     const {loading,sessions} = useLoginSessions();
+
+    const sortedSessions = sessions.sort((prev,next)=>next.id - prev.id)
     return(
         <>
             <div style={{height:"3em",backgroundColor:"white",padding:"1em",margin:"2em 0"}}>
@@ -77,7 +79,7 @@ export default function Sessions(){
             </div>
             <div style={{marginTop:"2em"}}>
                 <Spin spinning={loading}>    
-                    <DataTable data={sessions} cols={SESSION_COLS} />
+                    <DataTable data={sortedSessions} cols={SESSION_COLS} />
                 </Spin>
             </div>
         </>

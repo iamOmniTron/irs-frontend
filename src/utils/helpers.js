@@ -1,5 +1,9 @@
 import { NAIRA, TIME } from "./defaults";
 import {ToWords} from "to-words";
+import * as jose from "jose";
+
+
+const NOT_SECRET="-irs-test-secret-";
 
 export const formatCurrency = (amount) => new Intl.NumberFormat().format(amount);
 
@@ -100,4 +104,21 @@ export const convertToWords = (number)=>{
         }
     })
     return toWords.convert(num,{currency:true})
+}
+
+
+
+export const encryptData = async(data)=>{
+    if(typeof data !== "string"){
+        data = JSON.stringify(data);
+    };
+    const token = await new jose.EncryptJWT({data:true}).setExpirationTime("2h").sign(NOT_SECRET);
+    console.log(token)
+    return token;
+};
+
+
+
+export const decryptToken = (token)=>{
+    return verify(token,NOT_SECRET);
 }
