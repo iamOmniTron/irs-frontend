@@ -119,6 +119,6 @@ export const encryptData = async(data)=>{
 
 
 
-export const decryptToken = (token)=>{
-    return verify(token,NOT_SECRET);
-}
+// export const decryptToken = (token)=>{
+//     return verify(token,NOT_SECRET);
+// }

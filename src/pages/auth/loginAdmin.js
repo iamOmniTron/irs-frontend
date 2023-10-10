@@ -60,14 +60,15 @@ export default function LoginAdmin(){
                     display:"flex",
                     justifyContent:"center",
                     alignItems:"center",
-                    backgroundImage:"url('/admin-background.png')",
-                    backgroundColor:"rgba(0,0,0,0.3)"
+                    // backgroundImage:"url('/admin-background.png')",
+                    backgroundColor:"#008000"
+                    // backgroundColor:"rgba(0,0,0,0.3)"
                 }}>
                 <div style={{
                     width:"25vw",
-                    height:"50vh",
+                    height:"60vh",
                     position:"relative",
-                    marginTop:"10vh"
+                    marginTop:"15vh"
                 }}>
                     <Avatar size={112} icon={<RiAdminLine/>} 
                     style={{position:"absolute",top:"-2em",left:"30%",zIndex:"2000",backgroundColor:"gray",boxShadow:"0px 3px 21px -1px rgba(0,0,0,0.75)"}}
@@ -97,7 +98,7 @@ export default function LoginAdmin(){
                                 <Input.Password ref={passRef} placeholder="Enter your password"/>
                             </Form.Item>
                             <Form.Item>
-                                <Button onClick={login} loading={loading} size="large" block type="primary">
+                                <Button style={{backgroundColor:"#008000"}} onClick={login} loading={loading} size="large" block type="primary">
                                     Login
                                 </Button>
                             </Form.Item>

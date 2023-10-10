@@ -4,7 +4,7 @@ import {RiUserSettingsLine} from "react-icons/ri";
 import {BsShopWindow,BsFillBuildingsFill, BsPaypal,BsGraphUpArrow,BsPeopleFill, BsGlobe} from "react-icons/bs";
 import {FaFileInvoiceDollar,FaUserPlus,FaCog,FaCoins,FaUserCircle} from "react-icons/fa"
 import {FaMapLocationDot} from "react-icons/fa6"
-import {MdFormatSize,MdLocationPin} from "react-icons/md";
+import {MdFormatSize,MdLocationPin,MdAdminPanelSettings} from "react-icons/md";
 import {LiaBusinessTimeSolid} from "react-icons/lia";
 import {SlOrganization} from "react-icons/sl";
 import {RiUserLocationFill} from "react-icons/ri";
@@ -88,6 +88,11 @@ const SIDEBAR_MENU_ITEMS = [
                 key:"lga",
                 label:<Link to="/admin/lga"><b>Local Government Areas</b></Link>,
                 icon:<MdLocationPin/>
+            },
+            {
+                key:"admins",
+                label:<Link to="/admin/lga/admin"><b>L.G.A Administrator</b></Link>,
+                icon:<MdAdminPanelSettings/>
             }
         ]
     },

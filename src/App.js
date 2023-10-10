@@ -34,6 +34,7 @@ import Sessions from "./pages/admin/sessions";
 import UnregisteredUserPage from "./pages/user/unregistered";
 import { userStore } from "./store/userStore";
 import PaymentReciept from "./components/reciept";
+import LgaAdmins from "./pages/admin/lgaAdmins";
 
 function AuthAdminRoutes(){
 
@@ -45,6 +46,7 @@ function AuthAdminRoutes(){
             <Route path="/" element={<AdminDashboardLayout/>}>
               <Route path="" index element={<AdminDashboard/>}/>
               <Route path="district" element={<District/>}/>
+              <Route path="lga/admin" element={<LgaAdmins/>}/>
               <Route path="lga" element={<LocalGovernmentAreas/>}/>
               <Route path="gto" element={<TurnOvers/>}/>
               <Route path="cit" element={<Taxes/>}/>

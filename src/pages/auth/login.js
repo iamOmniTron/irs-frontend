@@ -1,4 +1,4 @@
-import {Row,Col,Button,Form,Typography,Image,message, Avatar, Input,Statistic} from "antd"
+import {Row,Col,Button,Form,Typography,Image,message, Avatar, Input,Statistic, Modal, Card, QRCode} from "antd"
 import {UserOutlined,QuestionCircleOutlined} from "@ant-design/icons";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 // import Lafia from "../../assets/lafia.jpg";
@@ -17,11 +17,12 @@ const {Countdown} = Statistic;
 
 export default function LoginUser(){
     const [loading,setLoading] = useState(false);
+    const [tempCode,setTempCode] = useState("")
+    const [showQRCode,setShowQRCode] = useState(false);
     const [userId,setUserId] = useState("");
     const navigate = useNavigate();
 
     const setUser = userStore(state=>state.setUser);
-    const user = userStore(state=>state.user);
     const emailRef = useRef(null);
     const codeRef = useRef(null);
 
@@ -35,8 +36,12 @@ export default function LoginUser(){
             const payload = {
                 email:extractValueFromInputRef(emailRef),
             }
-            const response = await loginUser(payload);
-            setUserId(response);
+            const res = await loginUser(payload);
+            console.log(res);
+            const {userId,code} = res;
+            setUserId(userId);
+            setTempCode(code);
+            console.log(tempCode)
             setLoading(false);
             message.success("OTP sent successfully");
         } catch (error) {
@@ -139,7 +144,7 @@ export default function LoginUser(){
                                             Confirm OTP
                                         </Button>
                                         <div style={{textAlign:"center",marginTop:"1em"}}>
-                                                    <Countdown prefix={"expires in:"} valueStyle={{fontSize:20}} value={Date.now() + OTP_TOKEN_DEADLINE} format="mm:ss" onFinish={()=>console.log("done")}/>
+                                                    <Countdown prefix={"expires in:"} valueStyle={{fontSize:20}} value={Date.now() + OTP_TOKEN_DEADLINE} format="mm:ss" onFinish={()=>setShowQRCode(true)}/>
                                                 </div>
                                     </Form.Item>
                                         </Form>
@@ -149,6 +154,11 @@ export default function LoginUser(){
                     </Row>
                 </Col>
             </Row>
+            <Modal title={"scan the QR code to login"} width={300} open={showQRCode} footer={null} onCancel={()=>setShowQRCode(false)}>
+                <Card>
+                    <QRCode value={tempCode} size={200}/>
+                </Card>
+            </Modal>
         </>
     )
 }
