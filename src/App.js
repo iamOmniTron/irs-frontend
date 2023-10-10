@@ -35,6 +35,18 @@ import UnregisteredUserPage from "./pages/user/unregistered";
 import { userStore } from "./store/userStore";
 import PaymentReciept from "./components/reciept";
 import LgaAdmins from "./pages/admin/lgaAdmins";
+import LoginLgaAdmin from "./pages/auth/loginLgaAdmin";
+import LgaAdminDashboardLayout from "./pages/lgaAdmin/components/layout";
+import LgaAdminDashboard from "./pages/lgaAdmin";
+import LgaPayments from "./pages/lgaAdmin/payments";
+import LgaInvoices from "./pages/lgaAdmin/invoice";
+import LgaUsers from "./pages/lgaAdmin/users";
+import LgaUser from "./pages/lgaAdmin/user";
+import LgaUnRegisteredUsers from "./pages/lgaAdmin/unregisteredUsers";
+import LgaUnRegisteredUser from "./pages/lgaAdmin/unregisteredUser";
+import LgaBusiness from "./pages/lgaAdmin/businesses";
+import LgaViewBusiness from "./pages/lgaAdmin/viewBusiness";
+import LgaBusinessReport from "./pages/lgaAdmin/businessReport";
 
 function AuthAdminRoutes(){
 
@@ -72,6 +84,27 @@ function AuthAdminRoutes(){
   </>
 }
 
+
+const AuthLGARoutes = ()=>{
+  const user = userStore(state=>state.user);
+
+  return !user.userId ? <Navigate to="/"/> :
+            <Routes>
+                <Route path="/" element={<LgaAdminDashboardLayout/>}>
+                  <Route path="" index element={<LgaAdminDashboard/>} />
+                  <Route path="payments"  element={<LgaPayments/>} />
+                  <Route path="invoices"  element={<LgaInvoices/>} />
+                  <Route path="users"  element={<LgaUsers/>} />
+                  <Route path="user"  element={<LgaUser/>} />
+                  <Route path="unregistered/users"  element={<LgaUnRegisteredUsers/>}/>
+                  <Route path="unregistered/user"  element={<LgaUnRegisteredUser/>}/>
+                  <Route path="businesses"  element={<LgaBusiness/>}/>
+                  <Route path="business"  element={<LgaViewBusiness/>}/>
+                  <Route path="business/report"  element={<LgaBusinessReport/>}/>
+                </Route>
+            </Routes>
+}
+
 const AuthUserRoutes = ()=>{
   const user = userStore(state=>state.user);
 
@@ -105,9 +138,11 @@ function App() {
           <Route path="/" element={<LoginUser/>}/>
           <Route path="/register" element={<RegisterUser/>} />
           <Route path="/admin/login" element={<LoginAdmin/>}/>
+          <Route path="/lga/login" element={<LoginLgaAdmin/>}/>
           <Route path="/admin/*" element={<AuthAdminRoutes/>}/>
           <Route path="/user/*" element={<AuthUserRoutes/>}/>
           <Route path="/payment/reciept" element={<PaymentReciept/>}/>
+          <Route path="/lga/*" element={<AuthLGARoutes/>}/>
         </Routes>
       </Router>
     </RefreshContext.Provider>

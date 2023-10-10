@@ -22,6 +22,25 @@ export const useUsers = (flag)=>{
         loading,users
     }
 }
+export const useLgaUsers = (flag)=>{
+    const [loading,setLoading]= useState(false);
+    const [users,setUsers] = useState([]);
+
+    useEffect(()=>{
+        const getUsers = async ()=>{
+            setLoading(true)
+            const url = `user/lga`;
+            const {data} = await query(url);
+            console.log(data);
+            setUsers(data);
+            setLoading(false);
+        }
+        getUsers();
+    },[flag]);
+    return {
+        loading,users
+    }
+}
 
 
 

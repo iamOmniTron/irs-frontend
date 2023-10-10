@@ -1,7 +1,6 @@
 import {Row,Col,Button,Form,Typography,Image,message, Avatar, Input,Statistic, Modal, Card, QRCode} from "antd"
 import {UserOutlined,QuestionCircleOutlined} from "@ant-design/icons";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-// import Lafia from "../../assets/lafia.jpg";
 import {BsShieldLockFill} from "react-icons/bs"
 import Logo from "../../assets/nsirs.webp";
 import { userStore,getUserProfile } from "../../store/userStore";
@@ -37,11 +36,9 @@ export default function LoginUser(){
                 email:extractValueFromInputRef(emailRef),
             }
             const res = await loginUser(payload);
-            console.log(res);
             const {userId,code} = res;
             setUserId(userId);
             setTempCode(code);
-            console.log(tempCode)
             setLoading(false);
             message.success("OTP sent successfully");
         } catch (error) {

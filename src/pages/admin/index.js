@@ -30,59 +30,6 @@ const BREADCRUMB_ITEMS = [
 
 
 
-// const DUMMY_BUSINESS_DATA = [
-//     {
-//         id:1,
-//         name:"Alaska groups ltd",
-//         owner:"Mr. Adeyinka Benson",
-//         registeredAt:"21 march 2012",
-//         businessSize:"large",
-//         ato:"above NGN 25,000,000"
-//     },
-//     {
-//         id:2,
-//         name:"God's Time Business",
-//         owner:"Mr Adeleke Jamiu",
-//         registeredAt:"10 september 2008",
-//         businessSize:"medium",
-//         ato:"below NGN 10,000,000"
-//     },
-//     {
-//         id:3,
-//         name:"Alaska groups ltd",
-//         owner:"Mr. Adeyinka Benson",
-//         registeredAt:"21 march 2012",
-//         businessSize:"large",
-//         ato:"above NGN 25,000,000"
-//     },
-//     {
-//         id:4,
-//         name:"God's Time Business",
-//         owner:"Mr Adeleke Jamiu",
-//         registeredAt:"10 september 2008",
-//         businessSize:"medium",
-//         ato:"below NGN 10,000,000"
-//     },
-//     {
-//         id:5,
-//         name:"Alaska groups ltd",
-//         owner:"Mr. Adeyinka Benson",
-//         registeredAt:"21 march 2012",
-//         businessSize:"large",
-//         ato:"above NGN 25,000,000"
-//     },
-//     {
-//         id:6,
-//         name:"God's Time Business",
-//         owner:"Mr Adeleke Jamiu",
-//         registeredAt:"10 september 2008",
-//         businessSize:"medium",
-//         ato:"below NGN 10,000,000"
-//     },
-    
-// ]
-
-
 const BUSINESS_DATA_COLS = [
     {
         title:"S/N",
@@ -138,7 +85,6 @@ export default function AdminDashboard(){
     // TODO:continue from here by grouping by lga
 
 
-    // let graphData = [];
 
     const graphData = lgas.map(l=>({
         id:l.id,
@@ -146,16 +92,6 @@ export default function AdminDashboard(){
         amount:groupedLGAPayments[l.id]?.map((p)=>p.amount).reduce((prev,curr)=>curr+prev,0)??0
     }))
 
-    // lgas.forEach((l)=>{
-    //     let obj = {
-    //         id:l.id,
-    //         name:l.value,
-            // amount:groupedLGAPayments[l.id].amount??0
-    //     }
-    //     d.push(obj)
-    // })
-
-    // console.log(groupedLGAPayments[10]?.map((p)=>p.amount))
 
     let total = 0;
     payments.forEach((p)=>{

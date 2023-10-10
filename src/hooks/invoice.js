@@ -50,4 +50,22 @@ export const useMyInvoices = (flag)=>{
         loading,invoices
     }
 }
+export const useLgaInvoices = (flag)=>{
+    const [loading,setLoading] = useState(false);
+    const [invoices,setInvoices] = useState([]);
+    useEffect(()=>{
+        const fetchInvoices = async ()=>{
+            setLoading(true);
+            const url = `invoice/lga`;
+            const {data} = await query(url);
+            setInvoices(data);
+            setLoading(false);
+        }
+        fetchInvoices();
+    },[flag]);
+
+    return {
+        loading,invoices
+    }
+}
 

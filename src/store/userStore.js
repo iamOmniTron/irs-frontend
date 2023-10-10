@@ -8,6 +8,11 @@ export const getUserProfile = async ()=>{
     const {data} = await query(profileEndpoint);
     return data;
 }
+export const getAdminProfile = async ()=>{
+    const profileEndpoint = 'admin/profile';
+    const {data} = await query(profileEndpoint);
+    return data;
+}
 
 
 export const userStore = create(
